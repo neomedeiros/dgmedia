@@ -1,0 +1,127 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+
+@section styles
+{
+    <link href="~/lib/bootstrap-daterangepicker/daterangepicker.css" rel="stylesheet" />
+    <link href="~/lib/chosen/chosen.css" rel="stylesheet" />
+    <link href="~/lib/angular-chosen-localytics/chosen-spinner.css" rel="stylesheet" />
+    <link href="~/lib/chosen-bootstrap/chosen.bootstrap.css" rel="stylesheet" />
+    <link href="~/lib/cog_loader/cog.css" rel="stylesheet" />
+}
+
+<style>
+
+</style>
+<div class="container body-content" ng-app="dgmediaApp" ng-controller="dgmediaController" ng-init="init()" ng-cloak>
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h4 class="panel-title">Filters</h4>
+            <span class="pull-right clickable"><i class="glyphicon glyphicon-chevron-up"></i></span>
+        </div>
+        <div class="panel-body">
+            <div class="dg-flexBox">
+                <div class="dg-flexBox-item">
+                    <div class="dg-flexBox-inner">
+                        <label for="actionStart">Action Start</label>
+                        <input id="actionStart" date-range-picker class="form-control date-picker" type="text" ng-model="selectedActionStart" />
+                    </div>
+                </div>
+                <div class="dg-flexBox-item">
+                    <div class="dg-flexBox-inner">
+                        <label for="actionTypes">Action Type</label>
+                        <div style="max-width: 280px;" ng-hide="isLoadingActionTypes">
+                            <select id="actionTypes" multiple
+                                    chosen
+                                    ng-model="selectedActionTypes"
+                                    ng-options="a.value as a.text for a in actionTypes"></select>
+
+                        </div>
+                        <div ng-show="isLoadingActionTypes">loading action types...</div>
+                    </div>
+                </div>
+                <div class="dg-flexBox-item">
+                    <div class="dg-flexBox-inner">
+                        <label>Action Url</label>
+                        <input type="text" ng-model="actionUrl" class="form-control" ng-blur="updateChart()" />
+                    </div>
+                </div>
+                <div class="dg-flexBox-item">
+                    <div class="dg-flexBox-inner">
+                        <label>Earn Type</label>
+                        <div style="max-width: 280px;" ng-hide="isLoadingEarnTypes">
+                            <select id="earnTypes" multiple
+                                    chosen
+                                    ng-model="selectedEarnTypes"
+                                    ng-options="a for a in earnTypes"></select>
+                        </div>
+                        <div ng-show="isLoadingEarnTypes">loading earn types...</div>
+                    </div>
+                </div>
+                <div class="dg-flexBox-item">
+                    <div class="dg-flexBox-inner">
+                        <label for="IPS">IP</label>
+                        <div style="max-width: 280px;" ng-hide="isLoadingIPS">
+                            <select id="IPS" multiple
+                                    chosen
+                                    ng-model="selectedIPS"
+                                    ng-options="a for a in IPS"></select>
+                        </div>
+                        <div ng-show="isLoadingIPS">loading IPs...</div>
+                    </div>
+                </div>
+                <div class="dg-flexBox-item">
+                    <div class="dg-flexBox-inner">
+                        <label for="startDate">Start Date</label>
+                        <input id="startDate" date-range-picker class="form-control date-picker" type="text" ng-model="selectedStartDate" />
+                    </div>
+                </div>
+                <div class="dg-flexBox-item">
+                    <div class="dg-flexBox-inner">
+                        <label>User ID</label>
+                        <div style="max-width: 280px;" ng-hide="isLoadingUserIDs">
+                            <select id="userIDs" multiple
+                                    chosen
+                                    ng-model="selectedUserIDs"
+                                    ng-options="a for a in userIDs"></select>
+                        </div>
+                        <div ng-show="isLoadingUserIDs">loading user IDs...</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="panel-footer text-right">
+            <button type="button" class="btn btn-primary btn-sm" ng-click="getChart()" ng-disabled="isLoadingChart">Update Chart</button>
+        </div>
+    </div>
+    <div class="panel panel-default" ng-show="chartData.length > 0">
+        <div class="panel-body">
+            <div id="chartContainer" style="width: 1107px; height: 500px; margin: 0" ng-hide="isLoadingChart"></div>
+            <div ng-show="isLoadingChart">
+                <div id="loader" class="overlay-loader">
+                    <div class="loader-background color-flip"></div>
+                    <img class="loader-icon spinning-cog" src="~/images/cog.svg" data-cog="cog10">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section scripts{
+
+    <script src="~/lib/underscore/underscore-min.js"></script>
+    <script src="~/lib/moment/moment.js"></script>
+
+    <script src="~/lib/highcharts/highcharts.js"></script>
+    <script src="~/lib/bootstrap-daterangepicker/daterangepicker.js"></script>
+    <script src="~/lib/chosen/chosen.jquery.js"></script>
+
+    <script src="~/lib/angular-daterangepicker/js/angular-daterangepicker.js"></script>
+    <script src="~/lib/angular-chosen-localytics/dist/angular-chosen.js"></script>
+
+    <script src="~/js/angular/Index/dgMediaApp.js"></script>
+    <script src="~/js/angular/Index/dgMediaController.js"></script>
+    <script src="~/js/angular/Index/dgMediaFactory.js"></script>
+}

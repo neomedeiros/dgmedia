@@ -1,0 +1,1 @@
+﻿var app = angular.module('dgmediaApp', ['daterangepicker', 'localytics.directives']);

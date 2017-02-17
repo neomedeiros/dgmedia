@@ -1,0 +1,16 @@
+{
+  "name": "asp.net",
+  "private": true,
+  "dependencies": {
+    "jquery": "2.2.0",
+    "jquery-validation": "1.14.0",
+    "jquery-validation-unobtrusive": "3.2.6",
+    "bootstrap": "3.3.6",
+    "angular": "1.5.5",
+    "moment": "2.13.0",
+    "underscore": "1.8.2",
+    "angular-daterangepicker": "~0.2.2",
+    "angular-chosen-localytics": "~1.5.1",
+    "highcharts": "4.2.4"
+  }
+}
