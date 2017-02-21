@@ -10,10 +10,12 @@
     function factory($http) {
         var service = {
             getActionTypes: getActionTypes,
+            getTenants: getTenants,
             getEarnTypes: getEarnTypes,
             getIPS: getIPS,
             getUserIDs: getUserIDs,
-            getChartData: getChartData
+            getChartData: getChartData,
+            getChartIntervals: getChartIntervals
         };
 
         return service;
@@ -41,6 +43,21 @@
         }
         function getUserIDs(onSuccess, onError) {
             $http.get('/Home/GetUserIDs').then(
+                function (response) { onSuccess(response.data) },
+                function (response) { onError(response.data || 'Request failed') }
+            );
+        }
+
+        function getTenants(onSuccess, onError) {
+
+            $http.get('/Home/GetTenants').then(
+                function (response) { onSuccess(response.data) },
+                function (response) { onError(response.data || 'Request failed') }
+            );
+        }
+
+        function getChartIntervals(onSuccess, onError) {
+            $http.get('/Home/GetChartIntervals').then(
                 function (response) { onSuccess(response.data) },
                 function (response) { onError(response.data || 'Request failed') }
             );

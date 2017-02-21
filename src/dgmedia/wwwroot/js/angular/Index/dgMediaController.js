@@ -7,6 +7,8 @@
         $scope.earnTypes = [];
         $scope.IPS = [];
         $scope.userIDs = [];
+        $scope.tenants = [];
+        $scope.chartIntervals = [];
 
         $scope.selectedActionStart = { startDate: moment("2017-01-01"), endDate: moment("2017-01-31") };
         $scope.selectedActionTypes = null;
@@ -15,11 +17,16 @@
         $scope.selectedIPS = null;
         $scope.actionUrl = null;
         $scope.selectedUserIDs = null;
+        $scope.selectedTenants = null;
+        $scope.selectedResultChartType = 0;
+        $scope.selectedChartInterval = 0;
 
         $scope.isLoadingActionTypes = true;
         $scope.isLoadingEarnTypes = true;
         $scope.isLoadingIPS = true;
         $scope.isLoadingUserIDs = true;
+        $scope.isLoadingTenants = true;
+        $scope.isLoadingChartIntervals = true;
 
         $scope.isLoadingChart = false;
 
@@ -33,6 +40,8 @@
             $scope.getEarnTypes();
             $scope.getIPS();
             $scope.getUserIDs();
+            $scope.getTenants();
+            $scope.getChartIntervals();
 
             var propertiesToObserve = [
                         'selectedActionStart',
@@ -40,7 +49,10 @@
                         'selectedEarnTypes',
                         'selectedStartDate',
                         'selectedIPS',
-                        'selectedUserIDs']
+                        'selectedUserIDs',
+                        'selectedTenants',
+                        'selectedResultChartType',
+                        'selectedChartInterval']
 
             $scope.subscribeProperties(propertiesToObserve);
 
@@ -90,6 +102,28 @@
             });
         }
 
+        $scope.getTenants = function () {
+            $dgMediaFactory.getTenants(
+            (result) => {
+                $scope.tenants = result;
+                $scope.isLoadingTenants = false;
+            },
+            (error) => {
+                console.log(error);
+            });
+        }
+
+        $scope.getChartIntervals = function () {
+            $dgMediaFactory.getChartIntervals(
+            (result) => {
+                $scope.chartIntervals = result;
+                $scope.isLoadingChartIntervals = false;
+            },
+            (error) => {
+                console.log(error);
+            });
+        }
+
         $scope.subscribeProperties = function (propertyNames) {
             $.each(propertyNames, function () {
                 $scope.$watch(this.toString(), function (newValue, oldValue) {
@@ -107,7 +141,9 @@
                 SelectedStartDate: toServerDateRange($scope.selectedStartDate),
                 SelectedIPS: $scope.selectedIPS,
                 ActionUrl: $scope.actionUrl,
-                SelectedUserIDs: $scope.selectedUserIDs
+                SelectedUserIDs: $scope.selectedUserIDs,
+                ResultChartType: $scope.selectedResultChartType,
+                ResultChartInterval: $scope.selectedChartInterval
             }
         }
 
@@ -135,10 +171,28 @@
                         });
 
                         var uData = _.map(userData, function (n) {
-                            return {
-                                x: new Date(n._id.year, n._id.month - 1, n._id.day, n._id.hour),
-                                y: n.total
+
+                            var result = {};
+
+                            if ($scope.selectedChartInterval == 0)
+                                result = {
+                                    x: new Date(n._id.year, n._id.month - 1, n._id.day, n._id.hour),
+                                    y: n.total
+                                }
+                            else if ($scope.selectedChartInterval == 1) {
+                                result = {
+                                    x: new Date(n._id.year, n._id.month - 1, n._id.day),
+                                    y: n.total
+                                }
                             }
+                            else if ($scope.selectedChartInterval == 2) {
+                                result = {
+                                    x: new Date(n._id.year, n._id.month - 1),
+                                    y: n.total
+                                }
+                            }
+
+                            return result;
                         });
 
 
@@ -157,6 +211,7 @@
         function bindChart() {
 
             var series = [];
+            var resultType = $scope.selectedResultChartType == 0 ? "# of events" : "earned nectar";
 
             $.each($scope.chartData, function (i) {
 
@@ -187,7 +242,7 @@
                 },
                 yAxis: {
                     title: {
-                        text: '# of events'
+                        text: resultType
                     },
                     min: 0
                 },

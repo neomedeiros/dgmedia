@@ -1,4 +1,5 @@
 ﻿using dgmedia.Entities.CustomTypes;
+using dgmedia.Entities.Enums;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,5 +15,7 @@ namespace dgmedia.Entities.Domain
         public DateRange SelectedStartDate { get; set; }
         public IEnumerable<string> SelectedIPS { get; set; }
         public IEnumerable<int> SelectedUserIDs { get; set; }       
+        public ResultChartType ResultChartType { get; set; }
+        public ResultChartInterval ResultChartInterval { get; set; }
     }
 }

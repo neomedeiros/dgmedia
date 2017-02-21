@@ -55,6 +55,20 @@ namespace dgmedia.Controllers
             return new JsonResult(actionTypes);
         }
 
+        [HttpGet]
+        public JsonResult GetTenants()
+        {
+            var tenants = _actionRepository.GetTenants().Select(m => new SelectItemModel() { Value = (int)m, Text = EnumHelper.GetDescription(m) });
+            return new JsonResult(tenants);
+        }
+
+        [HttpGet]
+        public JsonResult GetChartIntervals()
+        {
+            var tenants = _actionRepository.GetActionIntervals().Select(m => new SelectItemModel() { Value = (int)m, Text = EnumHelper.GetDescription(m) });
+            return new JsonResult(tenants);
+        }        
+
         [HttpPost]
         public JsonResult GenerateChart([FromBody]ActionsChartConfiguration actionsChartConfiguration)
         {

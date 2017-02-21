@@ -43,8 +43,11 @@
                 </div>
                 <div class="dg-flexBox-item">
                     <div class="dg-flexBox-inner">
-                        <label>Action Url</label>
-                        <input type="text" ng-model="actionUrl" class="form-control" ng-blur="updateChart()" />
+                        <label>Tenants</label>
+                        <select id="tenants" multiple
+                                chosen
+                                ng-model="selectedTenants"
+                                ng-options="a.value as a.text for a in tenants"></select>
                     </div>
                 </div>
                 <div class="dg-flexBox-item">
@@ -87,6 +90,32 @@
                                     ng-options="a for a in userIDs"></select>
                         </div>
                         <div ng-show="isLoadingUserIDs">loading user IDs...</div>
+                    </div>
+                </div>
+                <div class="dg-flexBox-item">
+                    <div class="dg-flexBox-inner">
+                        <label>Result Option</label>
+                        <div style="max-width: 280px;">
+                            <div class="radio">
+                                <label><input type="radio" name="resultOption" value="0" ng-model="selectedResultChartType"># of Events</label>
+                            </div>
+                            <div class="radio">
+                                <label><input type="radio" name="resultOption" value="1" ng-model="selectedResultChartType">Earned Nectar</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="dg-flexBox-item">
+                    <div class="dg-flexBox-inner">
+                        <label>Chart Interval</label>
+                        <div style="max-width: 280px;" ng-hide="isLoadingChartIntervals">
+                            <select id="chartInterval"
+                                    chosen
+                                    ng-model="selectedChartInterval"
+                                    ng-options="a.value as a.text for a in chartIntervals"></select>
+
+                        </div>
+                        <div ng-show="isLoadingChartIntervals">loading chart intervals...</div>
                     </div>
                 </div>
             </div>

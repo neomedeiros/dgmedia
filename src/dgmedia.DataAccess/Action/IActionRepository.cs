@@ -20,6 +20,8 @@ namespace dgmedia.DataAccess.Action
 
         IEnumerable<Tenant> GetTenants();
 
+        IEnumerable<ResultChartInterval> GetActionIntervals();
+
         IEnumerable<BsonDocument> GetActionChart(ActionsChartConfiguration chartConfiguration);
         
     }

@@ -12,6 +12,7 @@ using System.Globalization;
 using dgmedia.DataAccess.Connection;
 using dgmedia.DataAccess.Builders;
 using dgmedia.DataAccess.Builders.Match;
+using dgmedia.DataAccess.Builders.Group;
 
 namespace dgmedia.DataAccess
 {
@@ -41,10 +42,24 @@ namespace dgmedia.DataAccess
 
         public IEnumerable<Tenant> GetTenants()
         {
-            return GetCollection().Distinct<Tenant>("TenantId", FilterDefinition<ActionEntity>.Empty).ToList();
+            return GetCollection().Distinct<Tenant>("TenantId", Builders<ActionEntity>.Filter.Ne(m => m.TenantId, null)).ToList();
         }
 
+        public IEnumerable<ResultChartInterval> GetActionIntervals()
+        {
+            return new ResultChartInterval[] { ResultChartInterval.Hour, ResultChartInterval.Day, ResultChartInterval.Month };
+        }        
+
         public IEnumerable<BsonDocument> GetActionChart(ActionsChartConfiguration chartConfiguration)
+        {            
+            var aggregate = GetCollection().Aggregate()
+                .Match(GetMatchDocument(chartConfiguration))
+                .Group(GetGroupDocument(chartConfiguration));
+
+            return aggregate.ToList();
+        }
+
+        private BsonDocument GetMatchDocument(ActionsChartConfiguration chartConfiguration)
         {
             var matchBuilder = new MatchBuilder();
 
@@ -54,22 +69,21 @@ namespace dgmedia.DataAccess
             matchBuilder.BuildClause("EarnType", chartConfiguration.SelectedEarnTypes, MatchType.Integer);
             matchBuilder.BuildClause("IP", chartConfiguration.SelectedIPS, MatchType.String);
             matchBuilder.BuildClause("StartDate", chartConfiguration.SelectedStartDate, MatchType.DateRange);
-            
-            var aggregate = GetCollection().Aggregate()
-                .Match(matchBuilder.Document)
-                .Group(BsonDocument.Parse(@"
-                    {	                
-                        _id: {
-	  		            'userId': '$UserId',
-                        'year': { '$year': '$StartDate' },
-                        'month': { '$month': '$StartDate' },
-                        'day': { '$dayOfMonth': '$StartDate' },
-                        'hour': {'$hour': '$StartDate'}
-        	            }, 
-                        total:{$sum:1}
-                    }"));
 
-            return aggregate.ToList();
+            return matchBuilder.Document;
+        }
+
+        private BsonDocument GetGroupDocument(ActionsChartConfiguration chartConfiguration)
+        {
+            var groupClauseStrategy = new GroupClauseStrategy();
+            var groupBuilder = new GroupBuilder();
+
+            groupBuilder.BuildIdClause("'userId'", "'$UserId'");
+
+            groupClauseStrategy.Fill(groupBuilder, chartConfiguration.ResultChartInterval);
+
+            groupBuilder.BuildResultClause("$sum", (chartConfiguration.ResultChartType == ResultChartType.Events ? "1" : "\"$Nectar\""));
+            return groupBuilder.Document;
         }
     }
 }

@@ -49,7 +49,7 @@ namespace dgmedia.Entities.Domain
         public DateTime StartDate { get; set; }
 
         [BsonElement("TenantId")]
-        public Tenant TenantId { get; set; }
+        public Tenant? TenantId { get; set; }
 
         [BsonElement("UserId")]
         public int UserId { get; set; }
