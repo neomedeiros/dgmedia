@@ -35,6 +35,6 @@ namespace dgmedia.DataAccess.Builders.Match
         {
             if (value != null)
                 _document.Add(name, Strategies[type].Build(value));
-        }
+        }        
     }
 }

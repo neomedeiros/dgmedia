@@ -75,5 +75,12 @@ namespace dgmedia.Controllers
             var result = _actionRepository.GetActionChart(actionsChartConfiguration);
             return new JsonResult(result.ToJson());            
         }
+
+        [HttpPost]
+        public JsonResult GenerateReport()
+        {
+            var result = _actionRepository.GetActionReport();
+            return new JsonResult(result.ToJson());
+        }
     }
 }

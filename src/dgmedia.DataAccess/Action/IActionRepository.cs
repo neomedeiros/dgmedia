@@ -23,6 +23,7 @@ namespace dgmedia.DataAccess.Action
         IEnumerable<ResultChartInterval> GetActionIntervals();
 
         IEnumerable<BsonDocument> GetActionChart(ActionsChartConfiguration chartConfiguration);
-        
+
+        string GetActionReport();
     }
 }
